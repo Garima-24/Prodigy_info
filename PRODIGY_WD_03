@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-board">
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+        <div class="cell"></div>
+    </div>
+    <div id="message"></div>
+    <script src="script.js"></script>
+</body>
+</html>
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    border: 1px solid black;
+}
+
+.cell {
+    border: 1px solid black;
+    text-align: center;
+    font-size: 36px;
+}
+
+#message {
+    font-size: 24px;
+    text-align: center;
+    margin-top: 20px;
+}
+const gameBoard = document.getElementById('game-board');
+const messageElement = document.getElementById('message');
+
+const cells = Array.from(document.querySelectorAll('.cell'));
+
+let currentPlayer = 'X';
+
+const winningCombinations = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+];
+
+function checkWinner() {
+    for (const combination of winningCombinations) {
+        const [a, b, c] = combination;
+        if (cells[a].textContent && cells[a].textContent === cells[b].textContent && cells[a].textContent === cells[c].textContent) {
+            return cells[a].textContent;
+        }
+    }
+    return null;
+}
+
+function handleCellClick(index) {
+    if (cells[index].textContent || checkWinner()) {
+        return;
+    }
+    cells[index].textContent = currentPlayer;
+    const winner = checkWinner();
+    if (winner) {
+        messageElement.textContent = `Player ${winner} wins!`;
+    } else if (cells.every(cell => cell.textContent)) {
+        messageElement.textContent = "It's a tie!";
+    } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        messageElement.textContent = `Player ${currentPlayer}'s turn`;
+    }
+}
+
+cells.forEach((cell, index) => {
+    cell
