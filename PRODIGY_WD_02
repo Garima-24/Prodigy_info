@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="stopwatch">
+        <p id="time">00:00:00</p>
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <button id="reset">Reset</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+#stopwatch {
+    text-align: center;
+    padding: 20px;
+}
+
+#time {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+}
+const timeElement = document.getElementById('time');
+const startButton = document.getElementById('start');
+const stopButton = document.getElementById('stop');
+const resetButton = document.getElementById('reset');
+
+let intervalId;
+let milliseconds = 0;
+let seconds = 0;
+let minutes = 0;
+
+function formatTime() {
+    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    return `${formattedMinutes}:${formattedSeconds}:${milliseconds}`;
+}
+
+function updateTimer() {
+    milliseconds++;
+    if (milliseconds === 100) {
+        milliseconds = 0;
+        seconds++;
+        if (seconds === 60) {
+            seconds = 0;
+            minutes++;
+        }
+    }
+    timeElement.textContent = formatTime();
+}
+
+startButton.addEventListener('click', () => {
+    if (!intervalId) {
+        intervalId = setInterval(updateTimer, 10);
+    }
+});
+
+stopButton.addEventListener('click', () => {
+    clearInterval(intervalId);
+    intervalId = null;
+});
+
+resetButton.addEventListener('click', () => {
+    clearInterval(intervalId);
+    intervalId = null;
+    milliseconds = 0;
+    seconds = 0;
+    minutes = 0;
+    timeElement.textContent = formatTime();
+});
